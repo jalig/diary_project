@@ -1,4 +1,4 @@
-package tasks.exceptions;
+package tasks.exception;
 
 public class TaskNotFoundException extends Exception {
     public TaskNotFoundException(String message) {

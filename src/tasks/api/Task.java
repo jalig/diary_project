@@ -1,6 +1,6 @@
 package tasks.api;
 
-import tasks.exceptions.IncorrectArgumentException;
+import tasks.exception.IncorrectArgumentException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -8,22 +8,35 @@ import java.util.Objects;
 
 public abstract class Task {
     private static int idGenerator;
-    private String title;
     private final Type type;
     private final int id;
     private final LocalDateTime dateTime;
+    private String title;
     private String description;
 
 
-    public Task(String title, Type type, LocalDateTime dateTime,String description) {
+    public Task(String title, Type type, LocalDateTime dateTime, String description) {
         setTitle(title);
         this.type = type;
         this.id = ++idGenerator;
-        this.dateTime = dateTime;
-        this.description = description;
+        if (dateTime.isAfter(LocalDateTime.now())) {
+            this.dateTime = dateTime;
+        } else {
+            throw new IncorrectArgumentException("Введена неверная дата");
+        }
+        setDescription(description);
     }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        if (title == null || title.isBlank() || title.isEmpty()) {
+            throw new IncorrectArgumentException("Заголовок не введен", title);
+        } else {
+            this.title = title;
+        }
     }
 
     public Type getType() {
@@ -42,20 +55,12 @@ public abstract class Task {
         return description;
     }
 
-    public void setTitle(String title) {
-        if (this.title != null||!title.isBlank()||!title.isEmpty()) {
-            this.title = title;
-        } else {
-            try {
-                throw new IncorrectArgumentException("Введен неверный аргумент", title);
-            } catch (IncorrectArgumentException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void setDescription(String description) {
-        this.description = description;
+        if (description == null || description.isEmpty() || description.isBlank()) {
+            throw new IncorrectArgumentException("Отсутствует описание", description);
+        } else {
+            this.description = description;
+        }
     }
 
     @Override
@@ -72,9 +77,10 @@ public abstract class Task {
     }
 
     public abstract boolean appearsIn(LocalDate localDate);
+
     @Override
     public String toString() {
-        return  "Задача: " + title + " " +
+        return "Задача: " + title + " " +
                 "Тип: " + type + " " +
                 "ID - " + id + " " +
                 "Дата: " + dateTime + " " +

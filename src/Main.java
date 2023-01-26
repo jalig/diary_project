@@ -1,9 +1,9 @@
-import tasks.DailyTask;
-import tasks.MonthlyTask;
-import tasks.WeeklyTask;
-import tasks.api.TaskService;
+import tasks.task.DailyTask;
+import tasks.task.MonthlyTask;
+import tasks.service.TaskService;
 import tasks.api.Type;
-import tasks.exceptions.TaskNotFoundException;
+import tasks.task.WeeklyTask;
+import tasks.task.YearlyTask;
 
 import java.time.LocalDate;
 
@@ -17,23 +17,21 @@ public class Main {
         MonthlyTask monthlyTask = new MonthlyTask(
                 "Выучить стримы ",
                 Type.PERSONAL,
-                LocalDate.of(2023, 1, 3).atStartOfDay(),
+                LocalDate.of(2023, 2, 3).atStartOfDay(),
                 "Учить стримы ");
         WeeklyTask weeklyTask = new WeeklyTask(
                 "Прочитать книгу ",
                 Type.PERSONAL,
                 LocalDate.of(2023, 1, 5).atStartOfDay(),
                 "Да прочти ты уже");
+        YearlyTask yearlyTask = new YearlyTask(
+                "Прочитать книгу ",
+                Type.PERSONAL,
+                LocalDate.of(2024, 3, 1).atStartOfDay(),
+                "Да прочти ты уже");
 
         TaskService taskService = new TaskService();
-        taskService.add(dailyTask);
-        taskService.add(monthlyTask);
-        taskService.add(weeklyTask);
-        try {
-            taskService.remove(2);
-        } catch (TaskNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println(taskService.getAllByDate(LocalDate.of(2023, 1, 3)));
+
+
     }
 }
