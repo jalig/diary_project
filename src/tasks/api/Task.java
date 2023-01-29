@@ -19,10 +19,10 @@ public abstract class Task {
         setTitle(title);
         this.type = type;
         this.id = ++idGenerator;
-        if (dateTime.isAfter(LocalDateTime.now())) {
-            this.dateTime = dateTime;
-        } else {
+        if (dateTime.isBefore(LocalDateTime.now())) {
             throw new IncorrectArgumentException("Введена неверная дата");
+        } else {
+            this.dateTime = dateTime;
         }
         setDescription(description);
     }
@@ -57,7 +57,7 @@ public abstract class Task {
 
     public void setDescription(String description) {
         if (description == null || description.isEmpty() || description.isBlank()) {
-            throw new IncorrectArgumentException("Отсутствует описание", description);
+            this.description = "Описание отсутствует";
         } else {
             this.description = description;
         }
@@ -68,7 +68,11 @@ public abstract class Task {
         if (this == o) return true;
         if (!(o instanceof Task)) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(title, task.title) && type == task.type && Objects.equals(dateTime, task.dateTime) && Objects.equals(description, task.description);
+        return id == task.id
+                && Objects.equals(title, task.title)
+                && type == task.type
+                && Objects.equals(dateTime, task.dateTime)
+                && Objects.equals(description, task.description);
     }
 
     @Override
